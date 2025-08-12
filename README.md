@@ -25,8 +25,8 @@ make
 This will generate the executable `viscan`.
 
 ## Databases
-https://database.clamav.net/main.cvd
-https://database.clamav.net/daily.cvd 
+- https://database.clamav.net/main.cvd
+- https://database.clamav.net/daily.cvd 
 
 ## Using ClamAV Signature Databases
 
