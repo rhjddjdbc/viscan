@@ -1,6 +1,6 @@
 # ViScan
 
-ViScan is a lightweight file scanner that detects malware by matching file hashes against known signatures. It supports recursive scanning of files and directories and uses signature databases compatible with ClamAV.
+ViScan is a lightweight file scanner that detects malware by matching file hashes against known signatures. It uses the ClamAV databases.
 
 ## Features
 
@@ -77,6 +77,3 @@ ViScan expects signature files inside the `database/` directory, including files
 ## License
 
 ViScan is licensed under the GNU General Public License version 2 (GPLv2). See the `LICENSE` file for details.
-
-Would you like me to help you create a proper `LICENSE` file for GPLv2 as well?
-```
