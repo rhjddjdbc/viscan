@@ -12,7 +12,7 @@ ViScan is a lightweight file scanner that detects malware by matching file hashe
   - `.ldb`  
   - `.mdb`  
 - Automatic quarantine of infected files  
-- Verbose mode for detailed output  
+- Verbose mode for detailed output
 
 ## Building ViScan
 
@@ -24,12 +24,17 @@ make
 
 This will generate the executable `viscan`.
 
+## Databases
+https://database.clamav.net/main.cvd
+https://database.clamav.net/daily.cvd 
+
 ## Using ClamAV Signature Databases
 
 ViScan supports ClamAV databases with extensions `.hdb`, `.cdb`, `.ldb`, and `.mdb`. These files contain malware signatures that ViScan uses for detection.
 
 ### Unpacking ClamAV Databases
 
+**The script and databases must be in the same directory as viscan.**
 Use the following script to unpack the official `.cvd` database files and move the extracted signature files into the `database/` folder:
 
 ```bash
