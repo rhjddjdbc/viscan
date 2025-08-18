@@ -1,4 +1,4 @@
-#define _XOPEN_SOURCE 500
+efine _XOPEN_SOURCE 500
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -7,6 +7,7 @@
 #include "hash_utils.h"
 #include "hdb_parser.h"
 #include "quarantine.h"
+#include "update_database.h"
 
 static int verbose = 0;
 static int infected_count = 0;
@@ -47,14 +48,26 @@ static int nftw_callback(const char *fpath, const struct stat *sb, int typeflag,
 
 int main(int argc, char **argv) {
     int file_start = 1;
+    int force_update = 0;
 
-    if (argc > 1 && strcmp(argv[1], "--verbose") == 0) {
-        verbose = 1;
-        file_start = 2;
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "--verbose") == 0) {
+            verbose = 1;
+            file_start++;
+        } else if (strcmp(argv[i], "--force-update") == 0) {
+            force_update = 1;
+            file_start++;
+        }
     }
 
     if (argc - file_start < 1) {
-        printf("Usage: %s [--verbose] <file_or_dir1> [file_or_dir2 ...]\n", argv[0]);
+        printf("Usage: %s [--verbose] [--force-update] <file_or_dir1> [file_or_dir2 ...]\n", argv[0]);
+        return 1;
+    }
+
+    // Update database if needed
+    if (update_if_needed(force_update) != 0) {
+        fprintf(stderr, "[!] Failed to update the database.\n");
         return 1;
     }
 
@@ -99,4 +112,3 @@ int main(int argc, char **argv) {
     free_signatures();
     return 0;
 }
-
