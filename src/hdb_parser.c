@@ -48,7 +48,6 @@ void load_hdb_file(const char *path) {
     }
 }
 
-// Hilfsfunktion: überprüft ob Dateiname erlaubte Endung hat
 int has_allowed_extension(const char *filename) {
     const char *allowed_exts[] = {".hdb", ".cdb", ".ldb", ".mdb"};
     size_t len = strlen(filename);
