@@ -129,7 +129,7 @@ To manually force a refresh, use:
 To test detection functionality, you can create the standard [EICAR test file](https://www.eicar.org/download-anti-malware-testfile/) using:
 
 ```bash
-echo 'X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*' > eicar.com
+echo -n 'X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*' > eicar.com
 ```
 
 Then scan it:
