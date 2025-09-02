@@ -51,7 +51,22 @@ int main(int argc, char **argv) {
     int force_update = 0;
 
     for (int i = 1; i < argc; i++) {
-        if (strcmp(argv[i], "--verbose") == 0) {
+        if (strcmp(argv[i], "--help") == 0) {
+            const char *help_text =
+                "Usage: viscan [OPTIONS] <file_or_dir1> [file_or_dir2 ...]\n"
+                "\n"
+                "Options:\n"
+                "  --verbose         Print detailed scanning information\n"
+                "  --force-update    Force database update even if not expired\n"
+                "  --help            Show this help message and exit\n"
+                "\n"
+                "Examples:\n"
+                "  viscan file.txt\n"
+                "  viscan --verbose /home/user/downloads\n"
+                "  viscan --force-update /var/www/html\n";
+            printf("%s", help_text);
+            return 0;
+        } else if (strcmp(argv[i], "--verbose") == 0) {
             verbose = 1;
             file_start++;
         } else if (strcmp(argv[i], "--force-update") == 0) {
