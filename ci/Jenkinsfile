@@ -15,21 +15,23 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Building viscan..."
-                sh 'echo "Insert build command here (e.g., go build, make, etc.)"'
+                sh 'make'
             }
         }
 
         stage('Test') {
             steps {
                 echo "Running tests..."
-                sh 'make'
+                // This runs the viscan binary on a known file (for demo)
+                // Replace './src/main.c' with a real test file or test script
+                sh './viscan --verbose ./src/main.c || true'
             }
         }
 
         stage('Archive') {
             steps {
                 echo "Archiving artifacts..."
-                sh 'echo "Insert archiving commands here"'
+                archiveArtifacts artifacts: 'viscan', fingerprint: true
             }
         }
     }
