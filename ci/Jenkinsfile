@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+
+    environment {
+        REPO_URL = 'https://github.com/rhjddjdbc/viscan.git'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: "${REPO_URL}"
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo "Building viscan..."
+                sh 'echo "Insert build command here (e.g., go build, make, etc.)"'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo "Running tests..."
+                sh 'make'
+            }
+        }
+
+        stage('Archive') {
+            steps {
+                echo "Archiving artifacts..."
+                sh 'echo "Insert archiving commands here"'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build completed successfully!'
+        }
+        failure {
+            echo 'Build failed.'
+        }
+    }
+}
