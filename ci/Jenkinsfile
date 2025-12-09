@@ -3,34 +3,62 @@ pipeline {
 
     environment {
         REPO_URL = 'https://github.com/rhjddjdbc/viscan.git'
+        BUILD_DIR = 'build'
+    }
+
+    options {
+        timestamps()
+        ansiColor('xterm')
     }
 
     stages {
+
         stage('Checkout') {
             steps {
+                echo "Cloning repository..."
                 git branch: 'main', url: "${REPO_URL}"
+            }
+        }
+
+        stage('Prepare') {
+            steps {
+                echo "Creating build directory..."
+                sh 'mkdir -p ${BUILD_DIR}'
             }
         }
 
         stage('Build') {
             steps {
-                echo "Building viscan..."
-                sh 'make'
+                echo "Compiling viscan..."
+                sh '''
+                    make clean || true
+                    make
+                '''
             }
         }
 
         stage('Test') {
             steps {
                 echo "Running tests..."
-                // This runs the viscan binary on a known file (for demo)
-                // Replace './src/main.c' with a real test file or test script
-                sh './viscan --verbose ./src/main.c || true'
+                
+                sh '''
+                    if [ ! -f ./viscan ]; then
+                        echo "viscan binary not found!"
+                        exit 1
+                    fi
+
+                    echo "✔ Running smoke test..."
+                    ./viscan --help > /dev/null
+
+                    echo "✔ Running sample scan (expected to return 1 if infected)..."
+                    ./viscan --verbose Makefile || true
+                '''
             }
         }
 
-        stage('Archive') {
+        stage('Archive Artifacts') {
             steps {
-                echo "Archiving artifacts..."
+                echo "Archiving build artifacts..."
                 archiveArtifacts artifacts: 'viscan', fingerprint: true
             }
         }
@@ -42,6 +70,9 @@ pipeline {
         }
         failure {
             echo 'Build failed.'
+        }
+        always {
+            echo 'Pipeline finished.'
         }
     }
 }
