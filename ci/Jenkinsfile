@@ -2,13 +2,15 @@ pipeline {
     agent any
 
     environment {
-        REPO_URL = 'https://github.com/rhjddjdbc/viscan.git'
-        BUILD_DIR = 'build'
+        REPO_URL   = 'https://github.com/rhjddjdbc/viscan.git'
+        BUILD_DIR  = 'build'
+        BINARY     = 'viscan'
     }
 
     options {
         timestamps()
         ansiColor('xterm')
+        skipDefaultCheckout()
     }
 
     stages {
@@ -23,14 +25,15 @@ pipeline {
         stage('Prepare') {
             steps {
                 echo "Creating build directory..."
-                sh 'mkdir -p ${BUILD_DIR}'
+                sh "mkdir -p ${BUILD_DIR}"
             }
         }
 
         stage('Build') {
             steps {
-                echo "Compiling viscan..."
+                echo "Compiling ${BINARY}..."
                 sh '''
+                    set -e
                     make clean || true
                     make
                 '''
@@ -40,26 +43,27 @@ pipeline {
         stage('Test') {
             steps {
                 echo "Running tests..."
-                
-                sh '''
-                    if [ ! -f ./viscan ]; then
-                        echo "viscan binary not found!"
+
+                sh """
+                    if [ ! -f ./${BINARY} ]; then
+                        echo \"${BINARY} binary not found!\"
                         exit 1
                     fi
 
-                    echo "✔ Running smoke test..."
-                    ./viscan --help > /dev/null
+                    echo \"Running smoke test...\"
+                    ./${BINARY} --help > /dev/null
 
-                    echo "✔ Running sample scan (expected to return 1 if infected)..."
-                    ./viscan --verbose Makefile || true
-                '''
+                    echo \"Running sample scan...\"
+                    # viscan returns 1 on infected -> allowed
+                    ./${BINARY} --verbose Makefile || true
+                """
             }
         }
 
         stage('Archive Artifacts') {
             steps {
                 echo "Archiving build artifacts..."
-                archiveArtifacts artifacts: 'viscan', fingerprint: true
+                archiveArtifacts artifacts: "${BINARY}", fingerprint: true
             }
         }
     }
