@@ -1,17 +1,24 @@
-CC = gcc
-CFLAGS = -Wall -Wextra -I./src
-LDFLAGS = -lssl -lcrypto -lcurl
+<LeftMouse>CC       = gcc
+CFLAGS   = -Wall -Wextra -O2 -std=c11 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -Isrc/h
+LDLIBS   = -lcurl -lcrypto
 
-SRCS = src/main.c src/hash_utils.c src/hdb_parser.c src/quarantine.c src/update_database.c
-OBJS = $(SRCS:.c=.o)
+SRCDIR   = src
+SRCS     = $(SRCDIR)/main.c \
+           $(SRCDIR)/hash_utils.c \
+           $(SRCDIR)/hdb_parser.c \
+           $(SRCDIR)/quarantine.c \
+           $(SRCDIR)/update_database.c \
+           $(SRCDIR)/ac_engine.c
+OBJS     = $(SRCS:.c=.o)
 
+.PHONY: all clean
 all: viscan
 
 viscan: $(OBJS)
-	$(CC) -o viscan $(OBJS) $(LDFLAGS)
+	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LDLIBS)
 
-src/%.o: src/%.c
-	$(CC) -c $< -o $@ $(CFLAGS)
+$(SRCDIR)/%.o: $(SRCDIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f src/*.o viscan
+	rm -f $(OBJS) viscan
